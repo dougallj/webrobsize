@@ -1,0 +1,17 @@
+<html><head><meta charset="UTF-8"><title>Web robsize</title></head><body>
+  <style>
+  #pre { font-size: 7pt }
+  </style>
+<pre><strong>Web ROB-size</strong>
+
+This produces ASCII graphs showing the approximate sizes of various CPU
+out-of-order execution resources. This is pretty inaccurate, but it's a
+fun proof-of-concept. I apologise for the ASCII output.
+
+</pre>
+<pre id="pre"></pre>
+<script>
+for(var w=new Worker("worker.js?"+Math.random()),z=[],i=32;i<700;i+=8)z.push(i);var datas=[];for(i=0;i<3;i++)datas[i]={};for(var i of z)for(var data of datas)data[i]=[];w.onmessage=function(a){if(Array.isArray(a.data)){for(var r=0;r<datas.length;r++)datas[r][a.data[0]].push(a.data[1+r]);for(var t=[],e=0;e<datas.length;e++){var s=datas[e],d=0;for(var r of z){var n=s[r];n.length&&(d=Math.max(d,Math.min(...n)))}t.push(d)}var o="    "+"ROB".padEnd(t[0])+" | "+"Integer PRF".padEnd(t[1])+" | "+"Float PRF".padEnd(t[2])+"\n";for(var r of z){o+=(r<100?" ":"")+r+" ";for(e=0;e<datas.length;e++){var i="";if((s=datas[e])[r].length){var f=Math.min(...s[r]);i+="-".repeat(f)}0!=e&&(o+=" | "),o+=i=i.padEnd(t[e])}o+="\n"}document.getElementById("pre").textContent=o}};
+</script>
+</body>
+</html>
