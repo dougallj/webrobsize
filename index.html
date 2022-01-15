@@ -8,6 +8,14 @@ This produces ASCII graphs showing the approximate sizes of various CPU
 out-of-order execution resources. This is pretty inaccurate, but it's a
 fun proof-of-concept. I apologise for the ASCII output.
 
+This "tool" is mostly for entertainment purposes, at least for now.
+Please don't trust it. I thought I could make it work, and I thought
+it'd be insane, so I tried and it mostly works. More info <a href="https://twitter.com/dougallj/status/1482154850230366208">on Twitter</a>.
+
+Works better on Safari/Chrome. <a href="https://twitter.com/trav_downs/status/1482222930062811138">As Travis pointed out,</a> the ROB column
+actually measures the <a href="https://blog.stuffedcow.net/2013/05/measuring-rob-capacity/#comment-4410">PRRT</a> (or, the equivalent on Apple CPUs, which
+I've been calling the "Rename Retire Queue").
+
 </pre>
 <pre id="pre"></pre>
 <script>
