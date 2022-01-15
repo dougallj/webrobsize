@@ -19,7 +19,7 @@ this more.
 </pre>
 <pre id="pre"></pre>
 <script>
-for(var w=new Worker("ls.js?"+Math.random()),z=[],i=2;i<150;i+=2)z.push(i);var datas=[];for(i=0;i<4;i++)datas[i]={};for(var i of z)for(var data of datas)data[i]=[];w.onmessage=function(a){if(Array.isArray(a.data)){for(var r=0;r<datas.length;r++)datas[r][a.data[0]].push(a.data[1+r]);for(var t=[],e=0;e<datas.length;e++){var s=datas[e],d=0;for(var r of z){var n=s[r];n.length&&(d=Math.max(20,Math.max(d,Math.min(...n))))}t.push(d)}var o="    "+"Loads (by sqrt)".padEnd(t[0])+" | "+"Loads (by cache miss)".padEnd(t[1])+" | "+"Stores (by sqrt)".padEnd(t[2])+" | "+"Stores (by cache miss)".padEnd(t[3])+"\n";for(var r of z){o+=(r+" ").padStart(4);for(e=0;e<datas.length;e++){var i="";if((s=datas[e])[r].length){var f=Math.min(...s[r]);i+="-".repeat(f)}0!=e&&(o+=" | "),o+=i=i.padEnd(t[e])}o+="\n"}document.getElementById("pre").textContent=o}};
+for(var w=new Worker("ls.js?"+Math.random()),z=[],i=2;i<150;i+=2)z.push(i);var datas=[];for(i=0;i<4;i++)datas[i]={};for(var i of z)for(var data of datas)data[i]=[];w.onmessage=function(a){if(Array.isArray(a.data)){for(var r=0;r<datas.length;r++)datas[r][a.data[0]].push(a.data[1+r]);for(var t=[],e=0;e<datas.length;e++){var s=datas[e],d=0;for(var r of z){var n=s[r];n.length&&(d=Math.max(25,Math.max(d,Math.min(...n))))}t.push(d)}var o="    "+"Loads (by sqrt)".padEnd(t[0])+" | "+"Loads (by cache miss)".padEnd(t[1])+" | "+"Stores (by sqrt)".padEnd(t[2])+" | "+"Stores (by cache miss)".padEnd(t[3])+"\n";for(var r of z){o+=(r+" ").padStart(4);for(e=0;e<datas.length;e++){var i="";if((s=datas[e])[r].length){var f=Math.min(...s[r]);i+="-".repeat(f)}0!=e&&(o+=" | "),o+=i=i.padEnd(t[e])}o+="\n"}document.getElementById("pre").textContent=o}};
 </script>
 </body>
 </html>
