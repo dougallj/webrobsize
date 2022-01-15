@@ -5,10 +5,16 @@
 <pre><strong>Web load/store buffer size tester</strong>
 
 Attempts to find limits for in-flight loads and stores, which
-correspond to load/store queue sizes
+correspond to load/store buffer sizes on some hardware.
 
-This "tool" is mostly for entertainment purposes, at least for now.
-Please don't trust it.
+This "tool" is mostly for entertainment purposes, at least for
+now. Please don't trust it.
+
+The results on M1 are complicated by out-of-order store commit.
+<a href="https://dougallj.wordpress.com/2021/04/08/apple-m1-load-and-store-queue-measurements/">I've written more about them on my blog.</a>
+
+Loads on Zen 3 are confusing, I believe others have looked into
+this more.
 
 </pre>
 <pre id="pre"></pre>
