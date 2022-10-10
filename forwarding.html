@@ -1,0 +1,58 @@
+<html><head><title>Store-to-load forwarding latency tool</title></head><body>
+	<style>
+		body {
+			background-color: black;
+			color: white;
+			font-family: sans-serif; 
+		}
+		table { font-size: 8pt; border-spacing: 0; }
+		td, th {  }
+		th {
+			padding: 2;
+			color: white;
+			text-align: right;
+			font-weight: normal;
+		}
+		td {
+			padding: 2 2 2 0;
+			min-width: 30px;
+			text-align: right;
+		}
+		div {
+			margin-left: 20px;
+			max-width: 800px;
+		}
+		ul { margin: 0 }
+		a { color: #eee }
+	</style>
+	<div>
+	<p><strong>Store-to-load forwarding latency tool</strong></p>
+	<p>Based on Henry Wong's methodology from <a href="https://blog.stuffedcow.net/2014/01/x86-memory-disambiguation/">Store-to-Load Forwarding and Memory Disambiguation in x86 Processors</a>. Shows the approximate latency in cycles for a load/store pair at the given offsets. The table is populated in two passes, a quick initial pass first, and a slower, more precise, final pass.<p>
+
+	<p>Numbers vary due to browser implementation details (e.g. iOS appears slower than macOS as the smaller address space requires bounds checks for WebAssembly memory accesses, different browsers provide different timer granularities, and different JITs sometimes emit unnecessary extension operations, adding a cycle of latency when aliasing).</p>
+
+	<p>This "tool" is mostly for entertainment purposes, at least for now. Please don't trust it. I thought I could make it work, and I thought it'd be insane, so I tried and it mostly works.</p>
+	</div>
+	<script>
+		var extra,tr,td,match=/\?(store([^+]*)_load([^+]*))(\+[x0-9]+)?/.exec(location.search),funcname="store64_load32",storesize="64",loadsize="32";match&&(funcname=match[1],storesize=match[2],loadsize=match[3],match[4]&&(extra=parseInt(match[4])));var width=64,height=64,rows=[],body=document.body,table=document.createElement("table"),tbody=document.createElement("tbody");tr=document.createElement("tr"),td=document.createElement("th"),extra&&(td.textContent="Crossing 0x"+extra.toString(16)+"-byte boundary"),td.rowSpan=2,td.style.textAlign="left",tr.appendChild(td),(td=document.createElement("th")).textContent="",tr.appendChild(td),(td=document.createElement("th")).textContent=loadsize+"-bit Load Offset",td.colSpan=width,td.style.textAlign="left",tr.appendChild(td),tbody.appendChild(tr),tr=document.createElement("tr"),(td=document.createElement("th")).textContent="",tr.appendChild(td);for(var x=0;x<width;x++)(td=document.createElement("th")).textContent=x,tr.appendChild(td);tbody.appendChild(tr);for(var y=0;y<height;y++){tr=document.createElement("tr"),0==y&&((td=document.createElement("th")).textContent=storesize+"-bit Store Offset",td.style.minWidth="60px",td.style.maxWidth="60px",td.rowSpan=height,td.style.textAlign="left",td.style.verticalAlign="top",tr.appendChild(td)),(td=document.createElement("th")).textContent=y,tr.appendChild(td);for(var t=[],x=0;x<width;x++){var td=document.createElement("td");td.textContent="0.00",td.style.backgroundColor="#444",td.style.color="#444",tr.appendChild(td),t.push(td)}rows.push(t),tbody.appendChild(tr)}table.appendChild(tbody),document.body.appendChild(table);var worker=new Worker("forwarding.js");worker.onmessage=t=>{let[e,d,r,a]=t.data;var l=rows[r][d];l.textContent=a,e?l.style.color="#000":l.style.color="#888",(a=+a)<1.2?l.style.backgroundColor="hsl(120, 100%, 80%)":a>10?l.style.backgroundColor="hsl(0, 100%, 80%)":l.style.backgroundColor="hsl("+((10-a)*120/10|0)+", 100%, 80%)"},worker.postMessage([funcname,extra]);
+	</script>
+
+	<div style="margin-top: 20px">
+	<span>Variations:</span>
+		<ul>
+			<li><a href="?store64_load64">64-bit store + 64-bit load</a></li>
+			<li><a href="?store64_load32">64-bit store + 32-bit load (default)</a></li>
+			<li><a href="?store64_load16">64-bit store + 16-bit load</a></li>
+			<li><a href="?store64_load8">64-bit store + 8-bit load</a></li>
+			<li><a href="?store32_load64">32-bit store + 64-bit load</a></li>
+			<li><a href="?store32_load32">32-bit store + 32-bit load</a></li>
+			<li><a href="?store32_load16">32-bit store + 16-bit load</a></li>
+			<li><a href="?store32_load8">32-bit store + 8-bit load</a></li>
+			<li><a href="?store16_load16">16-bit store + 16-bit load</a></li>
+			<li><a href="?store16_load8">16-bit store + 8-bit load</a></li>
+			<li><a href="?store8_load8">8-bit store + 8-bit load</a></li>
+			<li><a href="?store64x2_load32">two 64-bit stores + 32-bit load</a></li>
+			<li><a href="?store64_load32+0x10000">64-bit store + 32-bit load, ending at page-boundary</a></li>
+		</ul>
+	</div>
+</body>
