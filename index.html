@@ -1,8 +1,8 @@
-<html><head><meta charset="UTF-8"><title>Web ROB size tester</title></head><body>
+<html><head><meta charset="UTF-8"><title>Web out-of-order buffer size tester</title></head><body>
   <style>
   #pre { font-size: 7pt }
   </style>
-<pre><strong>Web ROB size tester</strong>
+<pre><strong>Web out-of-order buffer size tester</strong>
 
 This produces ASCII graphs showing the approximate sizes of various CPU
 out-of-order execution resources. This is pretty inaccurate, but it's a
@@ -12,16 +12,20 @@ This "tool" is mostly for entertainment purposes, at least for now.
 Please don't trust it. I thought I could make it work, and I thought
 it'd be insane, so I tried and it mostly works. More info <a href="https://twitter.com/dougallj/status/1482154850230366208">on Twitter</a>.
 
-Works better on Safari/Chrome. <a href="https://twitter.com/trav_downs/status/1482222930062811138">As Travis pointed out,</a> the ROB column
-actually measures the <a href="https://blog.stuffedcow.net/2013/05/measuring-rob-capacity/#comment-4410">PRRT</a> (or the equivalent on Apple CPUs, which
-I've been calling the "Rename Retire Queue").
+Works better on Safari/Chrome. This tool was originally called the
+ROB size tester. <a href="https://twitter.com/trav_downs/status/1482222930062811138">As Travis pointed out,</a> it actually measures the
+<a href="https://blog.stuffedcow.net/2013/05/measuring-rob-capacity/#comment-4410">PRRT</a> (or the equivalent on Apple CPUs, which I've been calling the
+"Rename Retire Queue"). This is the maximum number of in-flight
+destination registers, which isn't a bad proxy for ROB size, but
+operations such as stores and branches don't use entries, so it's
+likely to underestimate how many instructions can be in-flight.
 
 See also my <a href="ls.html">web load/store buffer size tester</a>.
 
 </pre>
 <pre id="pre"></pre>
 <script>
-for(var w=new Worker("worker.js?"+Math.random()),z=[],i=32;i<700;i+=8)z.push(i);var datas=[];for(i=0;i<3;i++)datas[i]={};for(var i of z)for(var data of datas)data[i]=[];w.onmessage=function(a){if(Array.isArray(a.data)){for(var r=0;r<datas.length;r++)datas[r][a.data[0]].push(a.data[1+r]);for(var t=[],e=0;e<datas.length;e++){var s=datas[e],d=0;for(var r of z){var n=s[r];n.length&&(d=Math.max(d,Math.min(...n)))}t.push(d)}var o="    "+"ROB".padEnd(t[0])+" | "+"Integer PRF".padEnd(t[1])+" | "+"Float PRF".padEnd(t[2])+"\n";for(var r of z){o+=(r<100?" ":"")+r+" ";for(e=0;e<datas.length;e++){var i="";if((s=datas[e])[r].length){var f=Math.min(...s[r]);i+="-".repeat(f)}0!=e&&(o+=" | "),o+=i=i.padEnd(t[e])}o+="\n"}document.getElementById("pre").textContent=o}};
+for(var w=new Worker("worker.js?"+Math.random()),z=[],i=32;i<700;i+=8)z.push(i);var datas=[];for(i=0;i<3;i++)datas[i]={};for(var i of z)for(var data of datas)data[i]=[];w.onmessage=function(a){if(Array.isArray(a.data)){for(var r=0;r<datas.length;r++)datas[r][a.data[0]].push(a.data[1+r]);for(var t=[],e=0;e<datas.length;e++){var s=datas[e],d=0;for(var r of z){var n=s[r];n.length&&(d=Math.max(d,Math.min(...n)))}t.push(d)}var o="    "+"PRRT".padEnd(t[0])+" | "+"Integer PRF".padEnd(t[1])+" | "+"Float PRF".padEnd(t[2])+"\n";for(var r of z){o+=(r<100?" ":"")+r+" ";for(e=0;e<datas.length;e++){var i="";if((s=datas[e])[r].length){var f=Math.min(...s[r]);i+="-".repeat(f)}0!=e&&(o+=" | "),o+=i=i.padEnd(t[e])}o+="\n"}document.getElementById("pre").textContent=o}};
 </script>
 </body>
 </html>
